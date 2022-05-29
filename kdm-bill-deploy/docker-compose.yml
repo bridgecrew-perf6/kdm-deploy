@@ -18,6 +18,12 @@ services:
     container_name: kdm-bill-api
     image: jasoniv/kdm-bill-api:latest
     command: bash -c "alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
     ports: 
       - 8000:8000
     environment:
