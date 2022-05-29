@@ -1,0 +1,41 @@
+version: "3.8"
+
+services:
+  kdm-bill-nginx:
+    container_name: kdm-bill-nginx
+    depends_on:
+      - kdm-bill
+      - kdm-bill-api
+    build:
+      dockerfile: Dockerfile
+      context: ./nginx
+    ports:
+      - 80:80
+  kdm-bill:
+    container_name: kdm-bill
+    image: jasoniv/kdm-bill:latest
+  kdm-bill-api:
+    container_name: kdm-bill-api
+    image: jasoniv/kdm-bill-api:latest
+    command: bash -c "alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
+    ports: 
+      - 8000:8000
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@kdm-bill-db/kdm_bill
+      - SECRET_KEY=secret
+      - ALGORITHM=HS256
+    depends_on:
+      - kdm-bill-db
+  kdm-bill-db:
+    container_name: kdm-bill-db
+    image: postgres:13-alpine
+    volumes:
+      - kdm-bill-data:/var/lib/postgresql/data/
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=kdm_bill
+volumes:
+  kdm-bill-data:
