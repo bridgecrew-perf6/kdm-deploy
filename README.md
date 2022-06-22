@@ -22,6 +22,8 @@ $ docker-compose up -d
 ```
 $ docker-compose down
 ```
+- Web can be accessed at http://localhost.
+
 ## Bill Deploy
 
 - Change directory into kdm-bill-deploy.
@@ -42,3 +44,4 @@ $ docker-compose up -d
 ```
 $ docker-compose down
 ```
+- Web can be accessed at http://localhost.
